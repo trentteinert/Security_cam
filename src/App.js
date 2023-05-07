@@ -66,12 +66,7 @@ function App() {
       <ul>
         {cameras.map((camera) => (
           <li className='container' key={camera.id}>
-            <img
-              src={camera.imageurl}
-              alt=''
-              onLoad={handleImageLoad}
-              style={isLoading ? { display: 'none' } : {}}
-            />
+            <img src={camera.imageurl} alt='' />
             {!isLoading && <p>{camera.name}</p>}
             {!isLoading && <p>{camera.area}</p>}
           </li>
