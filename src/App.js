@@ -1,9 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import cameras from './cameras';
 import './App.css';
+import './custom-lightbox.css';
+import Lightbox from 'react-image-lightbox';
+import 'react-image-lightbox/style.css'; // Import the lightbox styling
 
 function CameraGrid() {
   const [lastUpdate, setLastUpdate] = useState(Date.now());
+  const [cameraList, setCameraList] = useState([]);
+  const [selectedCamera, setSelectedCamera] = useState(null);
+
+  useEffect(() => {
+    setCameraList(cameras.sort(() => 0.5 - Math.random()).slice(0, 12));
+  }, []);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -13,21 +22,37 @@ function CameraGrid() {
     return () => clearInterval(intervalId);
   }, []);
 
+  const handleRefreshClick = () => {
+    setCameraList(cameras.sort(() => 0.5 - Math.random()).slice(0, 12));
+    setSelectedCamera(null);
+  };
+
   return (
     <div>
       <div className='navbar'>
         <h1>NYC Security</h1>
-        <button>Refresh</button>
+        <button onClick={handleRefreshClick}>Refresh</button>
+      </div>
+      <div>
+        {selectedCamera && (
+          <img
+            className='selected-img'
+            src={selectedCamera.imageUrl}
+            alt='/'
+          ></img>
+        )}
       </div>
 
       <ul className='camera-grid'>
-        {cameras.slice(0, 12).map((camera) => (
+        {cameraList.map((camera) => (
           <div key={camera.id} className='container'>
-            <img
-              loading='lazy'
-              src={`${camera.imageUrl}?t=${lastUpdate}`}
-              alt={camera.name}
-            />
+            <div onClick={() => setSelectedCamera(camera)}>
+              <img
+                loading='lazy'
+                src={`${camera.imageUrl}?t=${lastUpdate}`}
+                alt={camera.name}
+              />
+            </div>
             <div className='camera-info'>
               <h2>{camera.name}</h2>
               <p>{camera.area}</p>

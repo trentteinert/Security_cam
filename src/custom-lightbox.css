@@ -1,0 +1,27 @@
+/* custom-lightbox.css */
+
+/* Change the background color of the Lightbox overlay */
+.ril__outer {
+  background-color: rgb(216, 96, 96);
+}
+
+/* Change the color of the image title */
+.ril__caption {
+  color: white;
+}
+/* Maintain the aspect ratio of the image */
+.ril__image {
+}
+
+/* Change the color of the close button */
+.ril__navButtons.ril__navButtons--right {
+  color: white;
+}
+
+/* Change the color of the navigation buttons */
+.ril__navButtons.ril__navButtons--left,
+.ril__navButtons.ril__navButtons--right {
+  color: white;
+}
+
+/* Add custom styles for other elements as needed */
