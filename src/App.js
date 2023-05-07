@@ -6,15 +6,20 @@ function App() {
   const [cameras, setCameras] = useState([]);
   const [loadedImages, setLoadedImages] = useState(-1);
   const [isLoading, setIsLoading] = useState(true);
+  const [lastUpdateTime, setLastUpdateTime] = useState(Date.now());
 
   const getRandomCameras = (camerasArray, count) => {
     const shuffled = camerasArray.sort(() => 0.5 - Math.random());
     return shuffled.slice(0, count);
   };
 
+  const generateImageUrl = (camera) => {
+    return `${camera.imageUrl.split('?')[0]}?t=${lastUpdateTime}`;
+  };
+
   const fetchCameras = async () => {
     try {
-      const response = await axios.get('/api/cameras/');
+      const response = await axios.get('/api/cameras');
       const randomCameras = getRandomCameras(response.data, 12);
       setCameras(randomCameras);
     } catch (error) {
@@ -34,16 +39,11 @@ function App() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCameras((prevCameras) =>
-        prevCameras.map((camera) => ({
-          ...camera,
-          imageurl: `${camera.imageUrl.split('?')[0]}?t=${Date.now()}`,
-        }))
-      );
-    }, 2000);
+      setLastUpdateTime(Date.now());
+    }, 500);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [lastUpdateTime]);
 
   const handleImageLoad = () => {
     setLoadedImages((prevCount) => prevCount + 1);
@@ -66,7 +66,12 @@ function App() {
       <ul>
         {cameras.map((camera) => (
           <li className='container' key={camera.id}>
-            <img src={camera.imageurl} alt='' />
+            <img
+              src={generateImageUrl(camera)}
+              alt=''
+              onLoad={handleImageLoad}
+              style={isLoading ? { display: 'none' } : {}}
+            />
             {!isLoading && <p>{camera.name}</p>}
             {!isLoading && <p>{camera.area}</p>}
           </li>

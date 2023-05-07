@@ -9,6 +9,7 @@ module.exports = function (app) {
       pathRewrite: {
         '^/api': '/api',
       },
+      logLevel: 'debug',
     })
   );
 };
