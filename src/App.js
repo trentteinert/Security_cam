@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import cameras from './cameras';
 import './App.css';
-import './custom-lightbox.css';
-import Lightbox from 'react-image-lightbox';
-import 'react-image-lightbox/style.css'; // Import the lightbox styling
 
 function CameraGrid() {
   const [lastUpdate, setLastUpdate] = useState(Date.now());
