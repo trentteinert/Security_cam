@@ -30,7 +30,7 @@ function App() {
 
   useEffect(() => {
     fetchCameras();
-  }, []);
+  }, [fetchCameras]);
 
   useEffect(() => {
     const interval = setInterval(() => {
