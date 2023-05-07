@@ -24,26 +24,32 @@ function CameraGrid() {
     setSelectedCamera(null);
   };
 
+  const scrollToTop = (camera) => {
+    setSelectedCamera(camera);
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  };
+
   return (
     <div>
       <div className='navbar'>
         <h1>NYC Security</h1>
         <button onClick={handleRefreshClick}>Refresh</button>
       </div>
-      <div>
-        {selectedCamera && (
-          <img
-            className='selected-img'
-            src={selectedCamera.imageUrl}
-            alt='/'
-          ></img>
-        )}
-      </div>
+      {selectedCamera && (
+        <img
+          className='selected-img'
+          src={`${selectedCamera.imageUrl}?t=${lastUpdate}`}
+          alt='/'
+        ></img>
+      )}
 
       <ul className='camera-grid'>
         {cameraList.map((camera) => (
           <div key={camera.id} className='container'>
-            <div onClick={() => setSelectedCamera(camera)}>
+            <div onClick={() => scrollToTop(camera)}>
               <img
                 loading='lazy'
                 src={`${camera.imageUrl}?t=${lastUpdate}`}

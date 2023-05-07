@@ -103,16 +103,25 @@ button {
   padding-right: 2px;
 }
 .lightbox {
-  position: absolute;
-
-  height: 90vh;
+  position: fixed;
+  width: 100%;
+  left: 0;
+  top: 0;
+  background-color: blue;
+  height: 100vh;
 }
 .selected-img {
   height: 80vh;
   width: 80%;
   margin-left: 10%;
   margin-bottom: 50px;
-  margin-top: 20px;
+  margin-top: 0.5vh;
+  object-fit: contain;
+}
+.selected-img-close {
+  width: 80%;
+  margin-left: 10%;
+  text-align: left;
   object-fit: contain;
 }
 
