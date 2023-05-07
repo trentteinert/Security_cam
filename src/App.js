@@ -1,84 +1,42 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import cameras from './cameras';
 import './App.css';
 
-function App() {
-  const [cameras, setCameras] = useState([]);
-  const [loadedImages, setLoadedImages] = useState(-1);
-  const [isLoading, setIsLoading] = useState(true);
-  const [lastUpdateTime, setLastUpdateTime] = useState(Date.now());
-
-  const getRandomCameras = (camerasArray, count) => {
-    const shuffled = camerasArray.sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, count);
-  };
-
-  const generateImageUrl = (camera) => {
-    return `${camera.imageUrl.split('?')[0]}?t=${lastUpdateTime}`;
-  };
-
-  const fetchCameras = async () => {
-    try {
-      const response = await axios.get('/api/cameras');
-      const randomCameras = getRandomCameras(response.data, 12);
-      setCameras(randomCameras);
-    } catch (error) {
-      console.error('Error fetching cameras:', error);
-    }
-  };
-
-  const refreshCameras = async () => {
-    setLoadedImages(-1);
-    setIsLoading(true);
-    await fetchCameras();
-  };
+function CameraGrid() {
+  const [lastUpdate, setLastUpdate] = useState(Date.now());
 
   useEffect(() => {
-    fetchCameras();
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setLastUpdateTime(Date.now());
+    const intervalId = setInterval(() => {
+      setLastUpdate(Date.now());
     }, 500);
 
-    return () => clearInterval(interval);
-  }, [lastUpdateTime]);
-
-  const handleImageLoad = () => {
-    setLoadedImages((prevCount) => prevCount + 1);
-  };
-
-  useEffect(() => {
-    if (loadedImages === cameras.length) {
-      setIsLoading(false);
-    }
-  }, [loadedImages, cameras.length]);
+    return () => clearInterval(intervalId);
+  }, []);
 
   return (
-    <div className='App'>
+    <div>
       <div className='navbar'>
         <h1>NYC Security</h1>
-        <button onClick={refreshCameras}>Refresh</button>
+        <button>Refresh</button>
       </div>
 
-      {isLoading ? <p className='loading-text'>Loading...</p> : null}
-      <ul>
-        {cameras.map((camera) => (
-          <li className='container' key={camera.id}>
+      <ul className='camera-grid'>
+        {cameras.slice(0, 12).map((camera) => (
+          <div key={camera.id} className='container'>
             <img
-              src={generateImageUrl(camera)}
-              alt=''
-              onLoad={handleImageLoad}
-              style={isLoading ? { display: 'none' } : {}}
+              loading='lazy'
+              src={`${camera.imageUrl}?t=${lastUpdate}`}
+              alt={camera.name}
             />
-            {!isLoading && <p>{camera.name}</p>}
-            {!isLoading && <p>{camera.area}</p>}
-          </li>
+            <div className='camera-info'>
+              <h2>{camera.name}</h2>
+              <p>{camera.area}</p>
+            </div>
+          </div>
         ))}
       </ul>
     </div>
   );
 }
 
-export default App;
+export default CameraGrid;
